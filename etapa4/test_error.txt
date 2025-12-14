@@ -1,0 +1,11 @@
+// Teste com erros semânticos
+
+int x = 10;
+int x = 20;  // redeclaração
+
+int main()
+{
+    y = 5;   // não declarado
+    x[10] = 1;  // x é escalar, não vetor
+    return 0;
+}

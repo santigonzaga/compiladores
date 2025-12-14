@@ -1,0 +1,38 @@
+// TESTE 2: Estruturas de Controle
+// Testa: if, if-else, comparacoes
+
+int x = 10;
+int y = 20;
+
+int main()
+{
+  // Teste de comparacao maior
+  if (x < y)
+    print "x < y: CORRETO";
+
+  if (x > y)
+    print "x > y: ERRO";
+
+  // Teste de igualdade
+  if (x == 10)
+    print "x == 10: CORRETO";
+
+  // Teste if-else
+  if (x == y)
+  {
+    print "x == y: ERRO";
+  }
+  else
+  {
+    print "x != y: CORRETO";
+  }
+
+  // Teste maior ou igual
+  x = 20;
+  if (x >= y)
+    print "x >= y: CORRETO";
+
+  // Teste menor ou igual
+  if (x <= y)
+    print "x <= y: CORRETO";
+}

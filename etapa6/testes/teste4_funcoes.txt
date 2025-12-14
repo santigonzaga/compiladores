@@ -1,0 +1,56 @@
+// TESTE 4: Funcoes
+// Testa: declaracao de funcoes, chamadas, parametros, retorno
+
+int resultado = 0;
+int r = 0;
+
+int main()
+{
+  // Teste funcao dobro
+  print "Dobro de 7:";
+  resultado = dobro(7);
+  print resultado;
+
+  // Teste funcao quadrado
+  print "Quadrado de 5:";
+  resultado = quadrado(5);
+  print resultado;
+
+  // Teste funcao cubo
+  print "Cubo de 3:";
+  resultado = cubo(3);
+  print resultado;
+
+  // Teste funcao composta
+  print "Dobro do quadrado de 4:";
+  resultado = quadrado(4);
+  resultado = dobro(resultado);
+  print resultado;
+
+  // Teste funcao incrementa
+  print "Incrementa 10:";
+  resultado = incrementa(10);
+  print resultado;
+}
+
+int dobro(int a)
+{
+  return a + a;
+}
+
+int quadrado(int b)
+{
+  return b * b;
+}
+
+int cubo(int c)
+{
+  r = c * c;
+  r = r * c;
+  return r;
+}
+
+int incrementa(int d)
+{
+  return d + 1;
+}

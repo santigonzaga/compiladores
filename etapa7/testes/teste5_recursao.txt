@@ -1,0 +1,120 @@
+// TESTE 5: Recursao e Complexidade
+// Testa: chamadas recursivas simples, funcoes compostas, algoritmos
+
+int resultado = 0;
+int i = 0;
+int a = 0;
+int b = 1;
+int temp = 0;
+int param = 0;
+
+int main()
+{
+  // Teste de funcao recursiva simples (countdown)
+  print "Contagem regressiva de 5:";
+  resultado = countdown(5);
+
+  // Fatorial iterativo de 5 (esperado: 120)
+  print "Fatorial iterativo de 5:";
+  resultado = fatorialIter(5);
+  print resultado;
+
+  // Fatorial iterativo de 6 (esperado: 720)
+  print "Fatorial iterativo de 6:";
+  resultado = fatorialIter(6);
+  print resultado;
+
+  // Fibonacci iterativo de 10 (esperado: 55)
+  print "Fibonacci iterativo de 10:";
+  resultado = fibonacciIter(10);
+  print resultado;
+
+  // Potencia 2^8 (esperado: 256)
+  print "2 elevado a 8:";
+  resultado = potencia(2);
+  print resultado;
+
+  // Soma de 1 a 100 (esperado: 5050)
+  print "Soma de 1 a 100:";
+  resultado = somaIter(100);
+  print resultado;
+
+  // Chamadas compostas
+  print "triplo(dobro(5)) = 30:";
+  resultado = dobro(5);
+  resultado = triplo(resultado);
+  print resultado;
+}
+
+// Funcao recursiva simples - countdown
+int countdown(int c1)
+{
+  if (c1 > 0)
+  {
+    print c1;
+    param = c1 - 1;
+    resultado = countdown(param);
+  }
+  return 0;
+}
+
+// Fatorial iterativo
+int fatorialIter(int f1)
+{
+  resultado = 1;
+  i = 1;
+  while (i <= f1)
+  {
+    resultado = resultado * i;
+    i = i + 1;
+  }
+  return resultado;
+}
+
+// Fibonacci iterativo
+int fibonacciIter(int fb1)
+{
+  a = 0;
+  b = 1;
+  i = 0;
+  while (i < fb1)
+  {
+    temp = a + b;
+    a = b;
+    b = temp;
+    i = i + 1;
+  }
+  return a;
+}
+
+// Potencia: calcula base^8
+int potencia(int p1)
+{
+  resultado = p1 * p1;
+  resultado = resultado * resultado;
+  resultado = resultado * resultado;
+  return resultado;
+}
+
+// Soma iterativa de 1 a n
+int somaIter(int s1)
+{
+  resultado = 0;
+  i = 1;
+  while (i <= s1)
+  {
+    resultado = resultado + i;
+    i = i + 1;
+  }
+  return resultado;
+}
+
+int dobro(int d1)
+{
+  return d1 + d1;
+}
+
+int triplo(int t1)
+{
+  return t1 + t1 + t1;
+}

@@ -1,0 +1,41 @@
+# macOS
+.DS_Store
+
+# Assembly files
+*.s
+
+# Object files
+*.o
+
+# Executables
+*.out
+a.out
+
+# Generated files (flex/bison)
+lex.yy.c
+y.tab.c
+y.tab.h
+*.tab.c
+*.tab.h
+
+# Editor files
+*~
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Build directories
+build/
+bin/
+
+# Logs
+*.log
+
+# Archives
+*.tgz
+*.tar.gz
+*.zip
+
+# Compiled executables (without extension)
+programa

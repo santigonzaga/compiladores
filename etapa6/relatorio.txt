@@ -1,0 +1,138 @@
+================================================================================
+                    RELATÓRIO - ETAPA 6: GERAÇÃO DE CÓDIGO ASSEMBLY
+                    INF01147 - Compiladores - UFRGS 2025/2
+                    Autor: Santiago Gonzaga
+================================================================================
+
+1. FERRAMENTAS E COMANDOS EMPREGADOS
+================================================================================
+
+1.1 Arquitetura-Alvo
+--------------------
+- Arquitetura: ARM64 (Apple Silicon)
+- Sistema Operacional: macOS
+- Sintaxe Assembly: AT&T (compatível com GCC/Clang)
+
+1.2 Ferramentas de Compilação
+-----------------------------
+- Compilador C++: g++ (Clang/Apple) com padrão C++11
+- Gerador de Parser: Bison
+- Gerador de Scanner: Flex
+- Montador/Linker: GCC/Clang (para montar o assembly gerado)
+
+1.3 Comandos de Build
+---------------------
+# Compilar o compilador:
+$ make clean
+$ make
+
+# Usar o compilador para gerar assembly:
+$ ./etapa6 <arquivo_entrada> <arquivo_saida.s>
+
+# Montar e linkar o assembly gerado:
+$ gcc -o programa arquivo_saida.s
+
+# Executar o programa gerado:
+$ ./programa
+
+2. ESTRUTURA DO CÓDIGO ASSEMBLY GERADO
+================================================================================
+
+O código assembly gerado segue a seguinte estrutura:
+
+2.1 Seção .data (Dados)
+-----------------------
+- Strings de formato para printf/scanf (_printint, _printintln, _readint)
+- Declaração de todas as variáveis globais como .long (32 bits)
+- Declaração de temporários usados na geração de código
+- Strings literais com labels únicos (_str0, _str1, etc.)
+
+2.2 Seção .text (Código)
+------------------------
+- Funções com prólogo padrão ARM64:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+- Tradução de cada instrução TAC para 1-4 instruções assembly
+- Epílogo de função:
+    ldp x29, x30, [sp], #16
+    ret
+
+2.3 Convenção de Chamada ARM64 macOS
+------------------------------------
+- Primeiro parâmetro: registrador w0/x0
+- Valor de retorno: registrador w0/x0
+- Frame pointer: x29
+- Link register: x30
+- Argumentos variádicos (printf): passados na pilha
+
+3. MAPEAMENTO TAC -> ASSEMBLY ARM64
+================================================================================
+
+TAC_MOVE (atribuição):
+    mov w0, #valor
+    adrp x1, _dest@PAGE
+    add x1, x1, _dest@PAGEOFF
+    str w0, [x1]
+
+TAC_ADD/SUB/MUL/DIV (aritmética):
+    add/sub/mul/sdiv w0, w0, w1
+
+TAC_LT/GT/LE/GE/EQ/DIF (comparações):
+    cmp w0, w1
+    cset w0, lt/gt/le/ge/eq/ne
+
+TAC_IFZ (desvio condicional):
+    cbz w0, _label
+
+TAC_JUMP (desvio incondicional):
+    b _label
+
+TAC_CALL (chamada de função):
+    bl _funcao
+
+TAC_RET (retorno):
+    ldp x29, x30, [sp], #16
+    ret
+
+TAC_PRINT (impressão):
+    sub sp, sp, #16
+    str x8, [sp]
+    bl _printf
+    add sp, sp, #16
+
+TAC_VEC_ACCESS/VEC_WRITE (vetores):
+    ldr/str w0, [x1, x0, lsl #2]
+
+4. LIMITAÇÕES CONHECIDAS
+================================================================================
+
+- Suporta apenas um parâmetro por função
+- Todas as variáveis são globais (não há stack frame local para variáveis)
+- Recursão com retorno de valor requer cuidado pois usa variáveis globais
+- Não suporta tipos float (apenas operações com inteiros)
+- Inicialização de vetores na declaração não é suportada (usar atribuição)
+
+5. ARQUIVOS DO PROJETO
+================================================================================
+
+Código fonte:
+- scanner.l       - Analisador léxico (Flex)
+- parser.y        - Analisador sintático (Bison)
+- symbols.hpp/cpp - Tabela de símbolos
+- ast.hpp/cpp     - Árvore Sintática Abstrata e geração de TAC
+- semantic.hpp/cpp- Análise semântica
+- tac.hpp/cpp     - Estruturas para código intermediário
+- asm.hpp/cpp     - Geração de código assembly ARM64
+- main.cpp        - Programa principal
+- Makefile        - Script de compilação
+
+Testes:
+- testes/teste1_basico.txt    - Operações básicas
+- testes/teste2_controle.txt  - Estruturas de controle
+- testes/teste3_loops.txt     - Loops e vetores
+- testes/teste4_funcoes.txt   - Funções
+- testes/teste5_recursao.txt  - Recursão e complexidade
+
+================================================================================
+                              FIM DO RELATÓRIO
+================================================================================

@@ -1,0 +1,58 @@
+// TESTE 3: Loops e Vetores
+// Testa: while, vetores, acesso indexado
+
+int i = 0;
+int soma = 0;
+int v[5];
+
+int main()
+{
+  // Contador simples
+  print "Contando de 1 a 5:";
+  i = 1;
+  while (i <= 5)
+  {
+    print i;
+    i = i + 1;
+  }
+
+  // Soma de 1 a 10
+  i = 1;
+  soma = 0;
+  while (i <= 10)
+  {
+    soma = soma + i;
+    i = i + 1;
+  }
+  print "Soma de 1 a 10:";
+  print soma;
+
+  // Inicializar vetor manualmente
+  v[0] = 10;
+  v[1] = 20;
+  v[2] = 30;
+  v[3] = 40;
+  v[4] = 50;
+
+  i=0;
+  while(i <= 4) {
+    print v[i];
+    i = i + 1;
+  }
+
+  // Modificar vetor
+  v[2] = 999;
+  print "v[2] modificado para:";
+  print v[2];
+
+  // Soma dos elementos do vetor usando loop
+  i = 0;
+  soma = 0;
+  while (i < 5)
+  {
+    soma = soma + v[i];
+    i = i + 1;
+  }
+  print "Soma do vetor (com v[2]=999):";
+  print soma;
+}

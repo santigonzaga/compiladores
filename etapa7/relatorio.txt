@@ -1,0 +1,122 @@
+================================================================================
+                   RELATÓRIO - ETAPA 7: RECUPERAÇÃO DE ERROS SINTÁTICOS
+                   INF01147 - Compiladores - UFRGS 2025/2
+                   Autor: Santiago Gonzaga
+================================================================================
+
+1. OBJETIVO
+================================================================================
+
+Implementar recuperação de erros sintáticos no compilador, permitindo que
+múltiplos erros sejam detectados e reportados em uma única execução, utilizando
+o modo pânico (panic mode) do Bison.
+
+2. O QUE FOI IMPLEMENTADO
+================================================================================
+
+2.1 Recuperação de Erros com Modo Pânico
+----------------------------------------
+O modo pânico é uma técnica simples de recuperação de erros onde, ao encontrar
+um erro sintático, o parser descarta tokens até encontrar um token de
+sincronização (como ';', '}' ou ')'), permitindo continuar a análise.
+
+2.2 Modificações no parser.y
+----------------------------
+- Adicionada variável global 'syntaxErrorCount' para contar erros
+- Adicionadas regras de erro usando o token especial 'error' do Bison
+- Cada regra de erro imprime uma mensagem descritiva e chama 'yyerrok'
+- A função yyerror() foi modificada para não chamar exit()
+
+Pontos de recuperação implementados:
+- Declarações globais inválidas (sincroniza na próxima declaração)
+- Literais inválidos em declaração de variável (sincroniza no ';')
+- Tamanho inválido de vetor (sincroniza no ']')
+- Lista de parâmetros inválida (sincroniza no ')')
+- Bloco de comandos inválido (sincroniza no '}')
+- Comandos inválidos (sincroniza no ';')
+- Expressões inválidas no if/while (sincroniza no ')')
+- Expressões entre parênteses inválidas (sincroniza no ')')
+
+2.3 Modificações no main.cpp
+----------------------------
+- Declaração externa de syntaxErrorCount
+- Verificação de erros sintáticos após o parsing
+- Desabilitação da geração de código (TAC e assembly) quando há erros
+- Análise semântica ainda executa para mostrar todos os erros possíveis
+
+3. COMO FUNCIONA
+================================================================================
+
+Exemplo de regra de erro no parser.y:
+
+    command:
+        ';' { $$ = nullptr; }
+        | assignment ';' { $$ = $1; }
+        | error ';' {
+            cerr << "Erro sintático na linha " << getLineNumber()
+                 << ": comando inválido" << endl;
+            syntaxErrorCount++;
+            yyerrok;
+            $$ = nullptr;
+        }
+        ;
+
+Quando o parser encontra um erro:
+1. O Bison automaticamente entra em modo de erro
+2. Tokens são descartados até encontrar ';' (token de sincronização)
+3. A mensagem de erro é impressa
+4. yyerrok reseta o estado de erro, permitindo continuar
+5. A análise prossegue a partir do próximo comando
+
+4. EXEMPLO DE USO
+================================================================================
+
+Arquivo com erros (teste_erros.txt):
+------------------------------------
+int x = ;           // Erro: literal faltando
+int v[abc];         // Erro: tamanho deve ser inteiro
+int main() {
+    read ;          // Erro: identificador faltando
+    if () { x=1; }  // Erro: expressão faltando
+    return 0;
+}
+
+Execução:
+---------
+$ ./etapa7 teste_erros.txt saida.s
+
+Saída:
+------
+Erro sintático na linha 1: literal inválido na declaração de variável
+Erro sintático na linha 2: tamanho de vetor inválido
+Erro sintático na linha 4: comando read inválido
+Erro sintático na linha 5: expressão inválida no if
+
+Analise sintatica concluida com 4 erro(s) sintatico(s)
+Geracao de codigo DESABILITADA devido a erros sintaticos
+
+5. COMPORTAMENTO
+================================================================================
+
+- Com erros sintáticos:
+  * Reporta todos os erros encontrados
+  * Executa análise semântica (mostra erros semânticos também)
+  * NÃO gera código TAC
+  * NÃO gera código assembly
+  * Retorna exit code 3
+
+- Sem erros sintáticos:
+  * Comportamento normal (igual etapa 6)
+  * Gera TAC e assembly normalmente
+  * Retorna exit code 0 (sucesso) ou 4 (erro semântico)
+
+6. ARQUIVOS MODIFICADOS
+================================================================================
+
+- parser.y  - Regras de erro e contador de erros
+- main.cpp  - Verificação de erros e controle de geração de código
+- Makefile  - Atualizado para etapa7
+
+================================================================================
+                              FIM DO RELATÓRIO
+================================================================================

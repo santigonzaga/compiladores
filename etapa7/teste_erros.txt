@@ -1,0 +1,47 @@
+// Arquivo de teste com multiplos erros sintaticos
+
+// Erro 1: declaracao de variavel sem literal
+int x = ;
+
+// Erro 2: declaracao de vetor com tamanho invalido
+int v[abc];
+
+// Declaracao correta
+int y = 10;
+
+// Funcao com erro na lista de parametros
+int foo(int, float) {
+    return 0;
+}
+
+// Funcao correta
+int bar(int a)
+{
+    // Erro 3: comando read invalido
+    read ;
+
+    // Erro 4: comando print invalido
+    print ;
+
+    // Erro 5: comando return invalido
+    return ;
+
+    // Comando correto
+    return a + 1;
+}
+
+// Outra funcao para testar erros em controle de fluxo
+int main()
+{
+    // Erro 6: expressao invalida no if
+    if () {
+        x = 1;
+    }
+
+    // Erro 7: expressao invalida no while
+    while () {
+        x = 2;
+    }
+
+    return 0;
+}
